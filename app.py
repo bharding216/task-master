@@ -1,10 +1,15 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_basicauth import BasicAuth
 
 app = Flask (__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['BASIC_AUTH_USERNAME'] = 'john'
+app.config['BASIC_AUTH_PASSWORD'] = 'secret'
+basic_auth = BasicAuth(app)
 db = SQLAlchemy(app)
+
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -16,6 +21,7 @@ class Todo(db.Model):
 
 
 @app.route('/', methods=['POST', 'GET'])
+@basic_auth.required
 def index():
     if request.method == 'POST':
         task_content = request.form['content']
@@ -50,11 +56,9 @@ def update(id):
 
     if request.method == 'POST':
         task.content = request.form['content']
-
         try:
             db.session.commit()
             return redirect('/')
-
         except:
             return 'There was an issue updating your task'
     else:
