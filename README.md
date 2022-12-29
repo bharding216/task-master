@@ -1,3 +1,3 @@
-# task-master
-This is my first CRUD web application.
-The next step will be to create username/password capability. 
+# To Do App + User Authentication
+
+I took my basic To Do Flask app and added user authentication functionality. 
